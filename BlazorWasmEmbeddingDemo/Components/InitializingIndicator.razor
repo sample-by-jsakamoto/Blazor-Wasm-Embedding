@@ -1,0 +1,17 @@
+﻿<span>
+    Initializing@(_transition)
+</span>
+
+@code {
+    private int _counter = 0;
+
+    private string _transition = "";
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        await Task.Delay(500);
+        _counter++;
+        _transition = new string('.', _counter % 4);
+        StateHasChanged();
+    }
+}

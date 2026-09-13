@@ -1,0 +1,44 @@
+﻿@inject EmbeddingService EmbeddingService
+
+<p>
+    <InputText @bind-Value="_inputValue" />
+</p>
+
+<p>
+    <button @onclick="Embed" disabled="@(!_initialized)">
+        Embed
+    </button>
+    @if (!_initialized)
+    {
+        <InitializingIndicator />
+    }
+</p>
+
+@if (_embedding.Length > 0)
+{
+    <p>Embedding Length: @_embedding.Length</p>
+    <p>First 10 values: @string.Join(", ", _embedding.Take(10))</p>
+}
+
+@code
+{
+    private bool _initialized = false;
+
+    private string _inputValue = string.Empty;
+
+    private float[] _embedding = [];
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (this.RendererInfo.IsInteractive)
+        {
+            await EmbeddingService.InitAsync();
+            _initialized = true;
+        }
+    }
+
+    private async Task Embed()
+    {
+        _embedding = await EmbeddingService.EmbedAsync(_inputValue);
+    }
+}
